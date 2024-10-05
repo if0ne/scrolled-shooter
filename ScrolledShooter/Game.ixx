@@ -26,6 +26,8 @@ private:
     std::vector<std::unique_ptr<GameObject>> _objectToCreate;
     std::vector<std::reference_wrapper<GameObject>> _objectsToRemove;
 
+    uint64_t _lastTick;
+
     Game() : _isRunning(true) {
         if (SDL_Init(SDL_INIT_VIDEO) < 0) {
             throw std::exception(SDL_GetError());
@@ -40,6 +42,8 @@ private:
 
         _playerController = std::make_unique<PlayerController>(*player.get());
         _gameObjects.push_back(std::move(player));
+
+        _lastTick = SDL_GetTicks64();
     }
 
     void ProcessEvents() {
@@ -55,10 +59,10 @@ private:
         }
     }
 
-    void Update() {
+    void Update(float dt) {
         _playerController->Update();
         for (auto& go : _gameObjects) {
-            go->Update(1.0);
+            go->Update(dt);
         }
     }
 
@@ -121,8 +125,12 @@ public:
 
         Initialize();
         while (_isRunning) {
+            uint64_t currentTick = SDL_GetTicks64();
+            float deltaTime = (currentTick - _lastTick) / 1000.0;
+            _lastTick = currentTick;
+
             ProcessEvents();
-            Update();
+            Update(deltaTime);
             PostUpdate();
             Render();
         }

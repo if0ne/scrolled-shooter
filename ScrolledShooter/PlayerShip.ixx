@@ -7,13 +7,20 @@ import GameObject;
 
 export class PlayerShip : public GameObject {
 private:
-    
+    float _targetY;
+    float _velocityY = 0.0;
+    float _acceleration = 1.0;
+    int _speed = 1.0;
+    int _fireRate;
+    int _lastShotTime;
 public:
-    PlayerShip(float x, float y) : GameObject(x, y, 250, 100)
+    PlayerShip(float x, float y) : GameObject(x, y, 250, 100), _targetY(y)
     {}
 
     void Update(float dt) override {
-        // todo: moving
+        _y = dt * _targetY + (1 - dt) * _y;
+
+        
     }
 
     void Render(SDL_Renderer* renderer) override {
@@ -28,6 +35,6 @@ public:
     }
 
     void TargetY(float y) {
-
+        _targetY = y;
     }
 };
