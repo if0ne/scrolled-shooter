@@ -9,6 +9,7 @@ export class Game;
 
 import GameObject;
 import PlayerShip;
+import PlayerController;
 
 export class Game {
 private:
@@ -17,6 +18,8 @@ private:
     bool _isRunning;
     SDL_Window* _window = nullptr;
     SDL_Renderer* _renderer = nullptr;
+
+    std::unique_ptr<PlayerController> _playerController;
 
     std::vector<std::unique_ptr<GameObject>> _gameObjects;
 
@@ -33,7 +36,10 @@ private:
     }
 
     void Initialize() {
-        _gameObjects.push_back(std::make_unique<PlayerShip>());
+        auto player = std::make_unique<PlayerShip>(150, 600 / 2);
+
+        _playerController = std::make_unique<PlayerController>(*player.get());
+        _gameObjects.push_back(std::move(player));
     }
 
     void ProcessEvents() {
@@ -43,15 +49,14 @@ private:
             case SDL_QUIT:
                 _isRunning = false;
                 break;
-            case SDL_MOUSEMOTION:
-                break;
-            case SDL_MOUSEBUTTONDOWN:
-                break;
             }
+
+            _playerController->ProcessEvent(event);
         }
     }
 
     void Update() {
+        _playerController->Update();
         for (auto& go : _gameObjects) {
             go->Update(1.0);
         }

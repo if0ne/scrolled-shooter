@@ -151,6 +151,7 @@
     <ClCompile Include="Game.ixx" />
     <ClCompile Include="GameObject.ixx" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PlayerController.ixx" />
     <ClCompile Include="PlayerShip.ixx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
