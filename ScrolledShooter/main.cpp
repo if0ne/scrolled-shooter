@@ -1,7 +1,6 @@
 import Game;
 
 int main(int argc, char* argv[]) {
-    Game game{};
-    game.Run();
+    Game::Instance().Run();
     return 0;
 }
