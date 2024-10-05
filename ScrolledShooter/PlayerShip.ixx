@@ -4,23 +4,57 @@
 export module PlayerShip;
 
 import GameObject;
+import Utility;
 
 export class PlayerShip : public GameObject {
 private:
     float _targetY;
-    float _velocityY = 0.0;
-    float _acceleration = 1.0;
-    int _speed = 1.0;
-    int _fireRate;
-    int _lastShotTime;
+
+    float _velocityY;
+    float _acceleration;
+    float _prevSign;
+    float _moveThreshold;
+
+    int _bulletsPerSecond;
+    float _shootDelay;
+    float _lastShotTime;
 public:
-    PlayerShip(float x, float y) : GameObject(x, y, 250, 100), _targetY(y)
+    PlayerShip(float x, float y, int bulltesPerSecond) 
+        : GameObject(x, y, 250.0f, 100.0f)
+        , _targetY(y)
+        , _moveThreshold(_height / 2.0f)
+        , _velocityY(0.0f)
+        , _acceleration(0.33f)
+        , _prevSign(1.0f)
+        , _bulletsPerSecond(bulltesPerSecond)
+        , _shootDelay(1.0 / _bulletsPerSecond)
+        , _lastShotTime(0.0)
     {}
 
     void Update(float dt) override {
-        _y = dt * _targetY + (1 - dt) * _y;
+        float delta = _targetY - _y;
+        float sign = Sign(delta);
 
-        
+        // Takes the speed away in the other direction
+        if (_prevSign > 0.0 && sign < 0.0) {
+            _velocityY = 0.0;
+        } else if (_prevSign < 0.0 && sign > 0.0) {
+            _velocityY = 0.0;
+        }
+
+        _prevSign = sign;
+
+        if (abs(delta) > _moveThreshold) {
+            _velocityY += dt * _acceleration * sign;
+        }
+
+        if (_y < _targetY && _y + _velocityY > _targetY
+            || _y > _targetY && _y + _velocityY < _targetY) {
+            _velocityY = 0.0;
+            _y = _targetY;
+        } else {
+            _y += _velocityY;
+        }
     }
 
     void Render(SDL_Renderer* renderer) override {
