@@ -148,10 +148,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bullet.ixx" />
     <ClCompile Include="Game.ixx" />
     <ClCompile Include="GameObject.ixx" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlayerController.ixx" />
+    <ClCompile Include="PlayerShip.cpp" />
     <ClCompile Include="PlayerShip.ixx" />
     <ClCompile Include="Utility.ixx" />
   </ItemGroup>

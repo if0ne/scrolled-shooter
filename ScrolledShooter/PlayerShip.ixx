@@ -1,10 +1,11 @@
 #include <SDL.h>
-#include <iostream>
 
 export module PlayerShip;
 
 import GameObject;
 import Utility;
+
+export class Game;
 
 export class PlayerShip : public GameObject {
 private:
@@ -44,7 +45,7 @@ public:
 
         _prevSign = sign;
 
-        if (abs(delta) > _moveThreshold) {
+        if (abs(static_cast<int>(delta)) > _moveThreshold) {
             _velocityY += dt * _acceleration * sign;
         }
 
@@ -63,12 +64,9 @@ public:
         SDL_RenderFillRect(renderer, &rect);
     }
 
-    void Shoot() {
-        // todo: shoot
-        std::cout << "Shoot" << std::endl;
-    }
-
     void TargetY(float y) {
         _targetY = y;
     }
+
+    void Shoot();
 };
