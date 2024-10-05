@@ -19,11 +19,11 @@ private:
     SDL_Window* _window = nullptr;
     SDL_Renderer* _renderer = nullptr;
 
-    std::unique_ptr<PlayerController> _playerController;
+    std::shared_ptr<PlayerController> _playerController;
 
-    std::vector<std::unique_ptr<GameObject>> _gameObjects;
+    std::vector<std::shared_ptr<GameObject>> _gameObjects;
 
-    std::vector<std::unique_ptr<GameObject>> _objectToCreate;
+    std::vector<std::shared_ptr<GameObject>> _objectToCreate;
     std::vector<std::reference_wrapper<GameObject>> _objectsToRemove;
 
     uint64_t _lastTick;
@@ -38,9 +38,9 @@ private:
     }
 
     void Initialize() {
-        auto player = std::make_unique<PlayerShip>(150, 600 / 2);
+        auto player = std::make_shared<PlayerShip>(150, 600 / 2, 20);
 
-        _playerController = std::make_unique<PlayerController>(*player.get());
+        _playerController = std::make_unique<PlayerController>(player);
         _gameObjects.push_back(std::move(player));
 
         _lastTick = SDL_GetTicks64();
@@ -81,7 +81,7 @@ private:
 
 
         while (!_objectToCreate.empty()) {
-            std::unique_ptr<GameObject> objToCreate = std::move(_objectToCreate.back());
+            std::shared_ptr<GameObject> objToCreate = std::move(_objectToCreate.back());
             _gameObjects.push_back(std::move(objToCreate));
             _objectsToRemove.pop_back();
         }
@@ -144,7 +144,7 @@ public:
         _objectsToRemove.push_back(object);
     }
 
-    void CreateGameObject(std::unique_ptr<GameObject>&& object) {
+    void CreateGameObject(std::shared_ptr<GameObject>&& object) {
         _objectToCreate.push_back(std::move(object));
     }
 };

@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <memory>
 
 export module PlayerController;
 
@@ -6,11 +7,11 @@ import PlayerShip;
 
 export class PlayerController {
 private:
-    PlayerShip& _player;
+    std::shared_ptr<PlayerShip> _player;
 
     bool _isHoldingShoot;
 public:
-    PlayerController(PlayerShip& player) 
+    PlayerController(std::shared_ptr<PlayerShip> player)
         : _player(player)
         , _isHoldingShoot(false)
     {}
@@ -18,7 +19,7 @@ public:
     void ProcessEvent(const SDL_Event& e) {
         switch (e.type) {
         case SDL_MOUSEMOTION:
-            _player.TargetY(e.motion.y);
+            _player->TargetY(e.motion.y);
             break;
         case SDL_MOUSEBUTTONDOWN:
             if (e.button.button == SDL_BUTTON_LEFT) {
@@ -35,7 +36,7 @@ public:
 
     void Update() {
         if (_isHoldingShoot) {
-            _player.Shoot();
+            _player->Shoot();
         }
     }
 };
