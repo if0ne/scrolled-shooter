@@ -30,6 +30,10 @@ private:
 
     }
 
+    void PostUpdate() {
+
+    }
+
     void Render() {
         SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
         SDL_RenderClear(_renderer);
@@ -58,6 +62,7 @@ public:
         while (_isRunning) {
             ProcessEvents();
             Update();
+            PostUpdate();
             Render();
         }
 
