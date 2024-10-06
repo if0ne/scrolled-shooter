@@ -16,6 +16,10 @@ import PlayerShip;
 import PlayerController;
 import Enemy;
 
+import Bird;
+import Bomber;
+import Fighter;
+
 export class Game {
 public:
     static const int kScreenWidth = 1280;
@@ -57,6 +61,10 @@ private:
 
         _playerController = std::make_shared<PlayerController>(_playerShip);
 
+        _enemies.push_back(std::make_shared<Bird>(kScreenWidth - 150, kScreenHeight / 2, -100.0f));
+        _enemies.push_back(Bomber::CreateBig(kScreenWidth - 150, kScreenHeight / 2 - 200.0f, -100.0f));
+        _enemies.push_back(std::make_shared<Fighter>(kScreenWidth - 150, kScreenHeight / 2, -100.0f, _playerShip));
+
         _lastTick = SDL_GetTicks64();
     }
 
@@ -80,6 +88,10 @@ private:
         for (auto& bullet : _bullets) {
             bullet->Update(dt);
         }
+
+        for (auto& enemy : _enemies) {
+            enemy->Update(dt);
+        }
     }
 
     void PostUpdate() {
@@ -101,6 +113,25 @@ private:
             _bullets.push_back(std::move(objToCreate));
             _bulletsToCreate.pop_back();
         }
+
+        while (!_enemyToRemove.empty()) {
+            Enemy& objToRemove = _enemyToRemove.back();
+            _enemies.erase(std::remove_if(
+                _enemies.begin(),
+                _enemies.end(),
+                [&](auto& p) {
+                    return objToRemove.Id() == p->Id();
+                }
+            ), _enemies.end());
+            _enemyToRemove.pop_back();
+        }
+
+
+        while (!_enemyToCreate.empty()) {
+            std::shared_ptr<Enemy> objToCreate = std::move(_enemyToCreate.back());
+            _enemies.push_back(std::move(objToCreate));
+            _enemyToCreate.pop_back();
+        }
     }
 
     void Render() {
@@ -111,6 +142,10 @@ private:
 
         for (auto& bullet : _bullets) {
             bullet->Render(_renderer);
+        }
+
+        for (auto& enemy : _enemies) {
+            enemy->Render(_renderer);
         }
 
         SDL_RenderPresent(_renderer);
@@ -172,6 +207,22 @@ public:
 
     void SpawnEnemy(std::shared_ptr<Enemy>&& object) {
         _enemyToCreate.push_back(std::move(object));
+    }
+
+    void KillPlayer() {
+        std::cout << "You lose!" << std::endl;
+    }
+
+    std::shared_ptr<PlayerShip> Player() const {
+        return _playerShip;
+    }
+
+    const std::vector<std::shared_ptr<Enemy>>& Enemies() const {
+        return _enemies;
+    }
+
+    const std::vector<std::shared_ptr<Bullet>>& Bullets() const {
+        return _bullets;
     }
 };
 

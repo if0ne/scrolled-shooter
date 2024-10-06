@@ -41,6 +41,14 @@ public:
         _y = y;
     }
 
+    float X() const {
+        return _x;
+    }
+
+    float Y() const {
+        return _y;
+    }
+
     void Size(float width, float height) {
         _width = width;
         _height = height;

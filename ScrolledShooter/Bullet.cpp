@@ -13,4 +13,26 @@ void Bullet::Update(float dt) {
         || _y > Game::kScreenHeight) {
         Game::Instance().DestroyBullet(*this);
     }
+
+    switch (_hitLayer)
+    {
+    case HitLayer::Player:
+        if (IsIntersect(*Game::Instance().Player().get())) {
+            Game::Instance().DestroyBullet(*this);
+            Game::Instance().KillPlayer();
+        }
+        break;
+    case HitLayer::Enemy:
+        auto enemies = Game::Instance().Enemies();
+
+        for (auto& enemy : enemies) {
+            if (enemy->IsBulletCollidable() && IsIntersect(*enemy.get())) {
+                Game::Instance().DestroyEnemy(*enemy.get());
+                Game::Instance().DestroyBullet(*this);
+                break;
+            }
+        }
+
+        break;
+    }
 }

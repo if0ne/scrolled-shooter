@@ -19,7 +19,7 @@ private:
     float _lastShotTime;
 public:
     PlayerShip(float x, float y, float fireRate) 
-        : GameObject(x, y, 250.0f, 100.0f)
+        : GameObject(x, y, 150.0f, 75.0f)
         , _targetY(y)
         , _moveThreshold(_height / 2.0f)
         , _velocityY(0.0f)
@@ -57,6 +57,10 @@ public:
 
     void TargetY(float y) {
         _targetY = y;
+    }
+
+    float TargetY() {
+        return _targetY;
     }
 
     void Shoot();

@@ -7,17 +7,19 @@ import GameObject;
 import Utility;
 
 export class Enemy : public GameObject {
-private:
+protected:
     float _velocityX;
-    bool _isCollidable;
+    bool _isBulletCollidable;
 public:
     Enemy(float x, float y, float width, float height, float velocityX)
         : GameObject(x, y, width, height)
         , _velocityX(velocityX)
-        , _isCollidable(false)
+        , _isBulletCollidable(false)
     {}
 
-    bool IsCollidable() const {
-        return _isCollidable;
+    void Update(float dt) override;
+
+    bool IsBulletCollidable() const {
+        return _isBulletCollidable;
     }
 };

@@ -33,4 +33,8 @@ public:
     }
 
     void Update(float dt) override;
+
+    HitLayer HitLayer() const {
+        return _hitLayer;
+    }
 };
