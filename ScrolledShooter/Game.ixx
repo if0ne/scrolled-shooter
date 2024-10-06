@@ -26,6 +26,11 @@ import Bomber;
 import Fighter;
 import EnemyFactory;
 
+enum class GameState {
+    Running,
+    End,
+};
+
 export class Game {
 public:
     static const int kScreenWidth = 1280;
@@ -54,17 +59,20 @@ private:
 
     uint64_t _lastTick;
 
+    uint64_t _prevScore;
     uint64_t _score;
     std::unique_ptr<Text> _scoreText;
+    std::unique_ptr<Text> _endText;
 
     std::unique_ptr<EnemyFactory> _enemyFactory;
     std::unique_ptr<MeteorManager> _meteorManager;
 
+    GameState _state;
+
     Game() 
         : _isRunning(true)
-        , _enemyFactory(std::make_unique<EnemyFactory>(1.5f))
-        , _meteorManager(std::make_unique<MeteorManager>())
         , _score(0)
+        , _state(GameState::Running)
     {
         if (SDL_Init(SDL_INIT_VIDEO) < 0) {
             throw std::exception(SDL_GetError());
@@ -82,8 +90,24 @@ private:
         _scoreText = std::make_unique<Text>(10.0, 10.0, 24.0, "0");
 
         _playerShip = std::make_shared<PlayerShip>(150, kScreenHeight / 2, 0.500f);
-
         _playerController = std::make_shared<PlayerController>(_playerShip);
+
+        _enemyFactory = std::make_unique<EnemyFactory>(1.5f);
+        _meteorManager = std::make_unique<MeteorManager>();
+        _prevScore = _score;
+        _score = 0;
+
+        _bullets.clear();
+        _bulletsToCreate.clear();
+        _bulletsToRemove.clear();
+
+        _enemies.clear();
+        _enemyToCreate.clear();
+        _enemyToRemove.clear();
+
+        _meteors.clear();
+        _meteorToCreate.clear();
+        _meteorToRemove.clear();
 
         _lastTick = SDL_GetTicks64();
     }
@@ -97,90 +121,128 @@ private:
                 break;
             }
 
-            _playerController->ProcessEvent(event);
+            switch (_state) {
+            case GameState::Running:
+                ProcessEventsInGame(event);
+                break;
+            case GameState::End:
+                ProcessEventsInEnd(event);
+                break;
+            }
+        }
+    }
+
+    void ProcessEventsInGame(SDL_Event& event) {
+        _playerController->ProcessEvent(event);
+    }
+
+    void ProcessEventsInEnd(SDL_Event& event) {
+        switch (event.type) {
+        case SDL_MOUSEBUTTONDOWN:
+            Initialize();
+            _state = GameState::Running;
+            break;
         }
     }
 
     void Update(float dt) {
-        _enemyFactory->Update();
-        _meteorManager->Update();
+        if (_state == GameState::Running) {
+            _enemyFactory->Update();
+            _meteorManager->Update();
 
-        _playerController->Update();
-        _playerShip->Update(dt);
+            _playerController->Update();
+            _playerShip->Update(dt);
 
-        for (auto& bullet : _bullets) {
-            bullet->Update(dt);
-        }
+            for (auto& bullet : _bullets) {
+                bullet->Update(dt);
+            }
 
-        for (auto& enemy : _enemies) {
-            enemy->Update(dt);
-        }
+            for (auto& enemy : _enemies) {
+                enemy->Update(dt);
+            }
 
-        for (auto& meteor : _meteors) {
-            meteor->Update(dt);
+            for (auto& meteor : _meteors) {
+                meteor->Update(dt);
+            }
         }
     }
 
     void PostUpdate() {
-        while (!_bulletsToRemove.empty()) {
-            Bullet& objToRemove = _bulletsToRemove.back();
-            _bullets.erase(std::remove_if(
-                _bullets.begin(),
-                _bullets.end(),
-                [&](auto& p) {
-                    return objToRemove.Id() == p->Id();
-                }
-            ), _bullets.end());
-            _bulletsToRemove.pop_back();
-        }
+        if (_state == GameState::Running) {
+            while (!_bulletsToRemove.empty()) {
+                Bullet& objToRemove = _bulletsToRemove.back();
+                _bullets.erase(std::remove_if(
+                    _bullets.begin(),
+                    _bullets.end(),
+                    [&](auto& p) {
+                        return objToRemove.Id() == p->Id();
+                    }
+                ), _bullets.end());
+                _bulletsToRemove.pop_back();
+            }
 
 
-        while (!_bulletsToCreate.empty()) {
-            std::shared_ptr<Bullet> objToCreate = _bulletsToCreate.back();
-            _bullets.push_back(std::move(objToCreate));
-            _bulletsToCreate.pop_back();
-        }
+            while (!_bulletsToCreate.empty()) {
+                std::shared_ptr<Bullet> objToCreate = _bulletsToCreate.back();
+                _bullets.push_back(std::move(objToCreate));
+                _bulletsToCreate.pop_back();
+            }
 
-        while (!_enemyToRemove.empty()) {
-            Enemy& objToRemove = _enemyToRemove.back();
-            _enemies.erase(std::remove_if(
-                _enemies.begin(),
-                _enemies.end(),
-                [&](auto& p) {
-                    return objToRemove.Id() == p->Id();
-                }
-            ), _enemies.end());
-            _enemyToRemove.pop_back();
-        }
-
-
-        while (!_enemyToCreate.empty()) {
-            std::shared_ptr<Enemy> objToCreate = _enemyToCreate.back();
-            _enemies.push_back(std::move(objToCreate));
-            _enemyToCreate.pop_back();
-        }
-
-        while (!_meteorToRemove.empty()) {
-            Meteor& objToRemove = _meteorToRemove.back();
-            _meteors.erase(std::remove_if(
-                _meteors.begin(),
-                _meteors.end(),
-                [&](auto& p) {
-                    return objToRemove.Id() == p->Id();
-                }
-            ), _meteors.end());
-            _meteorToRemove.pop_back();
-        }
+            while (!_enemyToRemove.empty()) {
+                Enemy& objToRemove = _enemyToRemove.back();
+                _enemies.erase(std::remove_if(
+                    _enemies.begin(),
+                    _enemies.end(),
+                    [&](auto& p) {
+                        return objToRemove.Id() == p->Id();
+                    }
+                ), _enemies.end());
+                _enemyToRemove.pop_back();
+            }
 
 
-        while (!_meteorToCreate.empty()) {
-            std::shared_ptr<Meteor> objToCreate = _meteorToCreate.back();
-            _meteors.push_back(std::move(objToCreate));
-            _meteorToCreate.pop_back();
+            while (!_enemyToCreate.empty()) {
+                std::shared_ptr<Enemy> objToCreate = _enemyToCreate.back();
+                _enemies.push_back(std::move(objToCreate));
+                _enemyToCreate.pop_back();
+            }
+
+            while (!_meteorToRemove.empty()) {
+                Meteor& objToRemove = _meteorToRemove.back();
+                _meteors.erase(std::remove_if(
+                    _meteors.begin(),
+                    _meteors.end(),
+                    [&](auto& p) {
+                        return objToRemove.Id() == p->Id();
+                    }
+                ), _meteors.end());
+                _meteorToRemove.pop_back();
+            }
+
+
+            while (!_meteorToCreate.empty()) {
+                std::shared_ptr<Meteor> objToCreate = _meteorToCreate.back();
+                _meteors.push_back(std::move(objToCreate));
+                _meteorToCreate.pop_back();
+            }
         }
     }
 
     void Render() {
+        switch (_state)
+        {
+        case GameState::Running:
+            RenderInGame();
+            break;
+        case GameState::End:
+            RenderInEnd();
+            break;
+        default:
+            break;
+        }
+    }
+
+    void RenderInGame() {
         SDL_SetRenderDrawColor(_renderer, 66, 170, 255, 255);
         SDL_RenderClear(_renderer);
 
@@ -203,6 +265,19 @@ private:
         }
 
         _scoreText->Render(_renderer);
+
+        SDL_RenderPresent(_renderer);
+    }
+
+    void RenderInEnd() {
+        SDL_SetRenderDrawColor(_renderer, 66, 170, 255, 255);
+        SDL_RenderClear(_renderer);
+
+        SDL_Rect rect = { 0.0, kScreenHeight - 10, kScreenWidth, kScreenHeight };
+        SDL_SetRenderDrawColor(_renderer, 0, 230, 0, 255);
+        SDL_RenderFillRect(_renderer, &rect);
+
+        _endText->Render(_renderer);
 
         SDL_RenderPresent(_renderer);
     }
@@ -275,7 +350,14 @@ public:
     }
 
     void KillPlayer() {
-        std::cout << "You lose!" << std::endl;
+        if (_score > _prevScore) {
+            std::string output = "New record: ";
+            output += std::to_string(_score);
+            _endText = std::make_unique<Text>(kScreenWidth / 2, kScreenHeight / 2, 24, std::move(output));
+        } else {
+            _endText = std::make_unique<Text>(kScreenWidth / 2, kScreenHeight / 2, 24, "You lose!");
+        }
+        _state = GameState::End;
     }
 
     void AddScore(uint64_t score) {
