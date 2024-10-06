@@ -1,7 +1,3 @@
-#pragma once
-#include <SDL.h>
-#include <memory>
-
 export module Bomber;
 
 import Enemy;
@@ -14,14 +10,6 @@ public:
         _isCollidable = true;
     }
 
-    void Update(float dt) override {
-        Enemy::Update(dt);
-        _x += _velocityX * dt;
-    }
-
-    void Render(SDL_Renderer* renderer) override {
-        SDL_Rect rect = { _x - _width / 2, _y - _height / 2, _width, _height };
-        SDL_SetRenderDrawColor(renderer, 215, 99, 128, 255);
-        SDL_RenderFillRect(renderer, &rect);
-    }
+    void Update(float dt) override;
+    void Render(SDL_Renderer* renderer) override;
 };

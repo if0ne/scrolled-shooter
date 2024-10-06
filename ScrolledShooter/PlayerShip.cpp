@@ -32,6 +32,12 @@ void PlayerShip::Update(float dt) {
     }
 }
 
+void PlayerShip::Render(SDL_Renderer* renderer) {
+    SDL_Rect rect = { _x - _width / 2, _y - _height / 2, _width, _height };
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_RenderFillRect(renderer, &rect);
+}
+
 void PlayerShip::Shoot() {
     float tick = SDL_GetTicks64() / 1000.0;
     float elapsed = (tick - _lastShotTime);

@@ -1,8 +1,7 @@
-#pragma once
-#include <SDL.h>
-#include <memory>
-
 export module Fighter;
+
+#pragma once
+#include <memory>
 
 import Enemy;
 import PlayerShip;
@@ -28,10 +27,5 @@ public:
     }
 
     void Update(float dt) override;
-
-    void Render(SDL_Renderer* renderer) override {
-        SDL_Rect rect = { _x - _width / 2, _y - _height / 2, _width, _height };
-        SDL_SetRenderDrawColor(renderer, 0, 99, 0, 255);
-        SDL_RenderFillRect(renderer, &rect);
-    }
+    void Render(SDL_Renderer* renderer) override;
 };

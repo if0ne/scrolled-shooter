@@ -1,6 +1,3 @@
-#pragma once
-#include <SDL.h>
-
 export module Bullet;
 
 import GameObject;
@@ -26,13 +23,8 @@ public:
         , _hitLayer(hitLayer)
     {}
 
-    void Render(SDL_Renderer* renderer) override {
-        SDL_Rect rect = { _x - _width / 2, _y - _height / 2, _width, _height };
-        SDL_SetRenderDrawColor(renderer, 54, 54, 54, 255);
-        SDL_RenderFillRect(renderer, &rect);
-    }
-
     void Update(float dt) override;
+    void Render(SDL_Renderer* renderer) override;
 
     HitLayer HitLayer() const {
         return _hitLayer;

@@ -1,6 +1,3 @@
-#pragma once
-#include <SDL.h>
-
 export module PlayerShip;
 
 import GameObject;
@@ -30,12 +27,8 @@ public:
     {}
 
     void Update(float dt) override;
-
-    void Render(SDL_Renderer* renderer) override {
-        SDL_Rect rect = { _x - _width / 2, _y - _height / 2, _width, _height };
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        SDL_RenderFillRect(renderer, &rect);
-    }
+    void Render(SDL_Renderer* renderer) override;
+    void Shoot();
 
     void TargetY(float y) {
         _targetY = y;
@@ -44,6 +37,4 @@ public:
     float TargetY() {
         return _targetY;
     }
-
-    void Shoot();
 };

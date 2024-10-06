@@ -1,8 +1,8 @@
+export module Text;
+
 #pragma once
 #include <SDL_ttf.h>
 #include <string>
-
-export module Text;
 
 export class Text {
 private:
@@ -40,15 +40,6 @@ public:
         }
     }
 
-    void Render(SDL_Renderer* renderer) {
-        SDL_Rect rect;
-        rect.x = _x;
-        rect.y = _y;
-        rect.w = _text.size() * _size;
-        rect.h = _size * 1.7f;
-
-        SDL_RenderCopy(renderer, _message, nullptr, &rect);
-    }
-
+    void Render(SDL_Renderer* renderer);
     void SetText(std::string&& text);
 };

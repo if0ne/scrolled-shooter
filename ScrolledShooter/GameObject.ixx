@@ -1,7 +1,7 @@
+export module GameObject;
+
 #pragma once
 #include <SDL.h>
-
-export module GameObject;
 
 static int nextId = 0;
 
@@ -31,6 +31,7 @@ public:
 
     virtual void Update(float dt) = 0;
     virtual void Render(SDL_Renderer* renderer) = 0;
+    bool IsIntersect(const GameObject& other) const;
 
     int Id() const {
         return _id;
@@ -52,26 +53,6 @@ public:
     void Size(float width, float height) {
         _width = width;
         _height = height;
-    }
-
-    bool IsIntersect(const GameObject& other) const {
-        float halfWidth = _width / 2.0f;
-        float halfHeight = _height / 2.0f;
-        float otherHalfWidth = other._width / 2.0f;
-        float otherHalfHeight = other._height / 2.0f;
-
-        float minX = _x - halfWidth;
-        float maxX = _x + halfWidth;
-        float minY = _y - halfHeight;
-        float maxY = _y + halfHeight;
-
-        float otherMinX = other._x - otherHalfWidth;
-        float otherMaxX = other._x + otherHalfWidth;
-        float otherMinY = other._y - otherHalfHeight;
-        float otherMaxY = other._y + otherHalfHeight;
-
-        return (minX <= otherMaxX && maxX >= otherMinX &&
-            minY <= otherMaxY && maxY >= otherMinY);
     }
 
     bool operator==(const GameObject& other) const {

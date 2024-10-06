@@ -1,3 +1,6 @@
+#pragma once
+#include <SDL.h>
+
 import Meteor;
 import Game;
 
@@ -20,4 +23,10 @@ void Meteor::Update(float dt) {
     if (_y > Game::kScreenHeight + _height / 2.0) {
         Game::Instance().DestroyMeteor(*this);
     }
+}
+
+void Meteor::Render(SDL_Renderer* renderer) {
+    SDL_Rect rect = { _x - _width / 2, _y - _height / 2, _width, _height };
+    SDL_SetRenderDrawColor(renderer, 239, 83, 39, 255);
+    SDL_RenderFillRect(renderer, &rect);
 }

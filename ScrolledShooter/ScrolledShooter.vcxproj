@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="Bird.cpp" />
     <ClCompile Include="Bird.ixx" />
+    <ClCompile Include="Bomber.cpp" />
     <ClCompile Include="Bomber.ixx" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Bullet.ixx" />
@@ -162,13 +163,16 @@
     <ClCompile Include="EnemyFactory.ixx" />
     <ClCompile Include="Fighter.cpp" />
     <ClCompile Include="Fighter.ixx" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Game.ixx" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObject.ixx" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Meteor.cpp" />
     <ClCompile Include="Meteor.ixx" />
     <ClCompile Include="MeteorManager.cpp" />
     <ClCompile Include="MeteorManager.ixx" />
+    <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="PlayerController.ixx" />
     <ClCompile Include="PlayerShip.cpp" />
     <ClCompile Include="PlayerShip.ixx" />

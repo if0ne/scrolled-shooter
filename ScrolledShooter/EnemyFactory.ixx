@@ -1,7 +1,7 @@
+export module EnemyFactory;
+
 #pragma once
 #include <memory>
-
-export module EnemyFactory;
 
 import Enemy;
 

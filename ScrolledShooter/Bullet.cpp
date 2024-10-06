@@ -1,3 +1,5 @@
+#include <SDL.h>
+
 import Bullet;
 import Game;
 
@@ -36,4 +38,10 @@ void Bullet::Update(float dt) {
 
         break;
     }
+}
+
+void Bullet::Render(SDL_Renderer* renderer) {
+    SDL_Rect rect = { _x - _width / 2, _y - _height / 2, _width, _height };
+    SDL_SetRenderDrawColor(renderer, 54, 54, 54, 255);
+    SDL_RenderFillRect(renderer, &rect);
 }

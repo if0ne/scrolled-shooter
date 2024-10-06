@@ -22,3 +22,9 @@ void Bird::Update(float dt) {
 
     _x += _velocityX * dt;
 }
+
+void Bird::Render(SDL_Renderer* renderer) {
+    SDL_Rect rect = { _x - _width / 2, _y - _height / 2, _width, _height };
+    SDL_SetRenderDrawColor(renderer, 99, 99, 128, 255);
+    SDL_RenderFillRect(renderer, &rect);
+}

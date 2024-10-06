@@ -41,6 +41,10 @@ void Fighter::Update(float dt) {
         ));
         _lastShotTime = tick;
     }
+}
 
-
+void Fighter::Render(SDL_Renderer* renderer) {
+    SDL_Rect rect = { _x - _width / 2, _y - _height / 2, _width, _height };
+    SDL_SetRenderDrawColor(renderer, 0, 99, 0, 255);
+    SDL_RenderFillRect(renderer, &rect);
 }

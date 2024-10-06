@@ -1,6 +1,3 @@
-#pragma once
-#include <SDL.h>
-
 export module Enemy;
 
 import GameObject;

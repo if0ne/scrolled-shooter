@@ -1,6 +1,3 @@
-#pragma once
-#include <SDL.h>
-
 export module Bird;
 
 import Enemy;
@@ -18,10 +15,5 @@ public:
     {}
 
     void Update(float dt) override;
-
-    void Render(SDL_Renderer* renderer) override {
-        SDL_Rect rect = { _x - _width / 2, _y - _height / 2, _width, _height };
-        SDL_SetRenderDrawColor(renderer, 99, 99, 128, 255);
-        SDL_RenderFillRect(renderer, &rect);
-    }
+    void Render(SDL_Renderer* renderer) override;
 };
