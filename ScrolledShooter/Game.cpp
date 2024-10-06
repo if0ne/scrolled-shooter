@@ -218,7 +218,7 @@ void Game::RenderInEnd() {
     SDL_SetRenderDrawColor(_renderer, 0, 230, 0, 255);
     SDL_RenderFillRect(_renderer, &rect);
 
-    _endText->Render(_renderer);
+    _endText->RenderCenter(_renderer);
 
     SDL_RenderPresent(_renderer);
 }

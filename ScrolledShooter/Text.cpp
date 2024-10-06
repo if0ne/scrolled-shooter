@@ -28,3 +28,13 @@ void Text::Render(SDL_Renderer* renderer) {
 
     SDL_RenderCopy(renderer, _message, nullptr, &rect);
 }
+
+void Text::RenderCenter(SDL_Renderer* renderer) {
+    SDL_Rect rect;
+    rect.x = _x - (_text.size() * _size) / 2;
+    rect.y = _y - _size * 1.7f / 2;
+    rect.w = _text.size() * _size;
+    rect.h = _size * 1.7f;
+
+    SDL_RenderCopy(renderer, _message, nullptr, &rect);
+}

@@ -41,5 +41,6 @@ public:
     }
 
     void Render(SDL_Renderer* renderer);
+    void RenderCenter(SDL_Renderer* renderer);
     void SetText(std::string&& text);
 };
