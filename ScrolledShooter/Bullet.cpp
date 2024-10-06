@@ -27,6 +27,7 @@ void Bullet::Update(float dt) {
 
         for (auto& enemy : enemies) {
             if (enemy->IsBulletCollidable() && IsIntersect(*enemy.get())) {
+                Game::Instance().AddScore(1);
                 Game::Instance().DestroyEnemy(*enemy.get());
                 Game::Instance().DestroyBullet(*this);
                 break;
