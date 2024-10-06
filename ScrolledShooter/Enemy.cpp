@@ -2,10 +2,8 @@ import Enemy;
 import Game;
 
 void Enemy::Update(float dt) {
-    if (_x < 0.0
-        || _x > Game::kScreenWidth
-        || _y < 0.0
-        || _y > Game::kScreenHeight) {
+    if (_x < -10.0
+        || _x > Game::kScreenWidth + 10.0) {
         Game::Instance().DestroyEnemy(*this);
     }
 

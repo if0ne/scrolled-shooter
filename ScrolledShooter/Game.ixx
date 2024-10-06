@@ -20,6 +20,8 @@ import Bird;
 import Bomber;
 import Fighter;
 
+import EnemyFactory;
+
 export class Game {
 public:
     static const int kScreenWidth = 1280;
@@ -46,7 +48,12 @@ private:
 
     uint64_t _lastTick;
 
-    Game() : _isRunning(true) {
+    std::unique_ptr<EnemyFactory> _enemyFactory;
+
+    Game() 
+        : _isRunning(true)
+        , _enemyFactory(std::make_unique<EnemyFactory>(1.5f))
+    {
         if (SDL_Init(SDL_INIT_VIDEO) < 0) {
             throw std::exception(SDL_GetError());
         }
@@ -60,10 +67,6 @@ private:
         _playerShip = std::make_shared<PlayerShip>(150, kScreenHeight / 2, 0.500f);
 
         _playerController = std::make_shared<PlayerController>(_playerShip);
-
-        _enemies.push_back(std::make_shared<Bird>(kScreenWidth - 150, kScreenHeight / 2, -100.0f));
-        _enemies.push_back(Bomber::CreateBig(kScreenWidth - 150, kScreenHeight / 2 - 200.0f, -100.0f));
-        _enemies.push_back(std::make_shared<Fighter>(kScreenWidth - 150, kScreenHeight / 2, -100.0f, _playerShip));
 
         _lastTick = SDL_GetTicks64();
     }
@@ -82,6 +85,8 @@ private:
     }
 
     void Update(float dt) {
+        _enemyFactory->Update();
+
         _playerController->Update();
         _playerShip->Update(dt);
 
@@ -202,6 +207,7 @@ public:
     }
 
     void DestroyEnemy(Enemy& object) {
+        _enemyFactory->HandleDeadEnemy();
         _enemyToRemove.push_back(object);
     }
 

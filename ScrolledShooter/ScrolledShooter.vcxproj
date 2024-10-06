@@ -154,6 +154,8 @@
     <ClCompile Include="Bullet.ixx" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Enemy.ixx" />
+    <ClCompile Include="EnemyFactory.cpp" />
+    <ClCompile Include="EnemyFactory.ixx" />
     <ClCompile Include="Fighter.cpp" />
     <ClCompile Include="Fighter.ixx" />
     <ClCompile Include="Game.ixx" />

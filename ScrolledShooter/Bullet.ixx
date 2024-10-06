@@ -19,7 +19,7 @@ private:
     HitLayer _hitLayer;
 public:
     Bullet(float x, float y, float velocityX, HitLayer hitLayer)
-        : GameObject(x, y, 50.0f, 50.0f)
+        : GameObject(x, y, 50.0f, 10.0f)
         , _velocityX(velocityX)
         , _velocityY(0.0f)
         , _acceleration(50.0f)

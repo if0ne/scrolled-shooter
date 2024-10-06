@@ -25,7 +25,7 @@ public:
         if (abs(static_cast<int>(delta)) > 1) {
             _y = Lerp(_y, _targetY, 2.0 * dt);
         } else {
-            _targetY = _baseY + Random(-50.0, 50.0);
+            _targetY = _baseY + Random(-400.0f, 400.0f);
         }
 
         _x += _velocityX * dt;

@@ -36,7 +36,7 @@ void Fighter::Update(float dt) {
         Game::Instance().SpawnBullet(std::make_shared<Bullet>(
             _x - _width / 2.0 - 25,
             _y,
-            -300.0,
+            -600.0,
             HitLayer::Player
         ));
         _lastShotTime = tick;
