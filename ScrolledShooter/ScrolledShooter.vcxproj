@@ -148,7 +148,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Bullet.ixx" />
+    <ClCompile Include="Enemy.ixx" />
     <ClCompile Include="Game.ixx" />
     <ClCompile Include="GameObject.ixx" />
     <ClCompile Include="main.cpp" />

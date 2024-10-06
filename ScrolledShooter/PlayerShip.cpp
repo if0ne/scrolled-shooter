@@ -11,7 +11,12 @@ void PlayerShip::Shoot() {
     float elapsed = (tick - _lastShotTime);
 
     if (elapsed > _fireRate) {
-        Game::Instance().SpawnBullet(std::make_shared<Bullet>(_x + _width / 2.0 + 25, _y, 300.0));
+        Game::Instance().SpawnBullet(std::make_shared<Bullet>(
+            _x + _width / 2.0 + 25,
+            _y, 
+            300.0, 
+            HitLayer::Enemy
+        ));
         _lastShotTime = tick;
     }
 }

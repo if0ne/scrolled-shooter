@@ -14,8 +14,12 @@ import Bullet;
 import GameObject;
 import PlayerShip;
 import PlayerController;
+import Enemy;
 
 export class Game {
+public:
+    static const int kScreenWidth = 1280;
+    static const int kScreenHeight = 720;
 private:
     static Game* _instance;
 
@@ -31,6 +35,11 @@ private:
     std::vector<std::shared_ptr<Bullet>> _bulletsToCreate;
     std::vector<std::reference_wrapper<Bullet>> _bulletsToRemove;
 
+    std::vector<std::shared_ptr<Enemy>> _enemies;
+
+    std::vector<std::shared_ptr<Enemy>> _enemyToCreate;
+    std::vector<std::reference_wrapper<Enemy>> _enemyToRemove;
+
     uint64_t _lastTick;
 
     Game() : _isRunning(true) {
@@ -38,12 +47,13 @@ private:
             throw std::exception(SDL_GetError());
         }
 
-        _window = SDL_CreateWindow("Scrolled Shooter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, 0);
+        _window = SDL_CreateWindow("Scrolled Shooter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, kScreenWidth, kScreenHeight, 0);
         _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
+
     }
 
     void Initialize() {
-        _playerShip = std::make_shared<PlayerShip>(150, 720 / 2, 0.125f);
+        _playerShip = std::make_shared<PlayerShip>(150, kScreenHeight / 2, 0.500f);
 
         _playerController = std::make_shared<PlayerController>(_playerShip);
 
@@ -154,6 +164,14 @@ public:
 
     void SpawnBullet(std::shared_ptr<Bullet>&& object) {
         _bulletsToCreate.push_back(std::move(object));
+    }
+
+    void DestroyEnemy(Enemy& object) {
+        _enemyToRemove.push_back(object);
+    }
+
+    void SpawnEnemy(std::shared_ptr<Enemy>&& object) {
+        _enemyToCreate.push_back(std::move(object));
     }
 };
 
