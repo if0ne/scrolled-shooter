@@ -24,7 +24,7 @@ public:
         , _lastShotTime(0.0)
         , _targetY(y)
     {
-        _isBulletCollidable = true;
+        _isCollidable = true;
     }
 
     void Update(float dt) override;

@@ -16,7 +16,7 @@ void Bird::Update(float dt) {
         _y = Lerp(_y, _targetY, 2.0 * dt);
     }
     else {
-        _targetY = _baseY + Random(-400.0f, 400.0f);
+        _targetY = _baseY + Random(-200.0f, 200.0f);
         _targetY = std::min(_targetY, Game::kScreenHeight - 10.0f - _height);
     }
 

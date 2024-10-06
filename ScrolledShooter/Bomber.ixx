@@ -11,7 +11,7 @@ public:
     Bomber(float x, float y, float velocityX)
         : Enemy(x, y, 200.0f, 100.0f, velocityX)
     {
-        _isBulletCollidable = true;
+        _isCollidable = true;
     }
 
     void Update(float dt) override {

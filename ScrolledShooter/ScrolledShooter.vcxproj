@@ -165,6 +165,10 @@
     <ClCompile Include="Game.ixx" />
     <ClCompile Include="GameObject.ixx" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Meteor.cpp" />
+    <ClCompile Include="Meteor.ixx" />
+    <ClCompile Include="MeteorManager.cpp" />
+    <ClCompile Include="MeteorManager.ixx" />
     <ClCompile Include="PlayerController.ixx" />
     <ClCompile Include="PlayerShip.cpp" />
     <ClCompile Include="PlayerShip.ixx" />

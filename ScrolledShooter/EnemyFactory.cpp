@@ -20,7 +20,8 @@ void EnemyFactory::Update() {
         _lastSpawnTime = tick;
         _active++;
         _spawnRate = std::max(_spawnRate - 0.01f, 0.2f);
-        Game::Instance().SpawnEnemy(RandomEnemy());
+        std::shared_ptr<Enemy> enemy = RandomEnemy();
+        Game::Instance().SpawnEnemy(enemy);
     }
 
     if (_deadCounter == static_cast<int>(_maxActive * 1.5f)) {
@@ -35,7 +36,7 @@ void EnemyFactory::HandleDeadEnemy() {
 }
 
 std::shared_ptr<Enemy> EnemyFactory::RandomEnemy() {
-    int random = Random(0, 3);
+    int random = Random(0, 2);
 
     switch (random) {
     case 0: {
@@ -63,6 +64,7 @@ std::shared_ptr<Enemy> EnemyFactory::RandomEnemy() {
         }
     }
     default:
+        throw std::exception("Broken random");
         break;
     }
 }

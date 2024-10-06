@@ -16,6 +16,8 @@ import Bullet;
 import GameObject;
 import PlayerShip;
 import PlayerController;
+import Meteor;
+import MeteorManager;
 import Text;
 
 import Enemy;
@@ -39,25 +41,29 @@ private:
     std::shared_ptr<PlayerShip> _playerShip;
 
     std::vector<std::shared_ptr<Bullet>> _bullets;
-
     std::vector<std::shared_ptr<Bullet>> _bulletsToCreate;
     std::vector<std::reference_wrapper<Bullet>> _bulletsToRemove;
 
     std::vector<std::shared_ptr<Enemy>> _enemies;
-
     std::vector<std::shared_ptr<Enemy>> _enemyToCreate;
     std::vector<std::reference_wrapper<Enemy>> _enemyToRemove;
 
-    uint64_t _lastTick;
+    std::vector<std::shared_ptr<Meteor>> _meteors;
+    std::vector<std::shared_ptr<Meteor>> _meteorToCreate;
+    std::vector<std::reference_wrapper<Meteor>> _meteorToRemove;
 
-    std::unique_ptr<EnemyFactory> _enemyFactory;
+    uint64_t _lastTick;
 
     uint64_t _score;
     std::unique_ptr<Text> _scoreText;
 
+    std::unique_ptr<EnemyFactory> _enemyFactory;
+    std::unique_ptr<MeteorManager> _meteorManager;
+
     Game() 
         : _isRunning(true)
         , _enemyFactory(std::make_unique<EnemyFactory>(1.5f))
+        , _meteorManager(std::make_unique<MeteorManager>())
         , _score(0)
     {
         if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -97,6 +103,7 @@ private:
 
     void Update(float dt) {
         _enemyFactory->Update();
+        _meteorManager->Update();
 
         _playerController->Update();
         _playerShip->Update(dt);
@@ -107,6 +114,10 @@ private:
 
         for (auto& enemy : _enemies) {
             enemy->Update(dt);
+        }
+
+        for (auto& meteor : _meteors) {
+            meteor->Update(dt);
         }
     }
 
@@ -125,7 +136,7 @@ private:
 
 
         while (!_bulletsToCreate.empty()) {
-            std::shared_ptr<Bullet> objToCreate = std::move(_bulletsToCreate.back());
+            std::shared_ptr<Bullet> objToCreate = _bulletsToCreate.back();
             _bullets.push_back(std::move(objToCreate));
             _bulletsToCreate.pop_back();
         }
@@ -144,9 +155,28 @@ private:
 
 
         while (!_enemyToCreate.empty()) {
-            std::shared_ptr<Enemy> objToCreate = std::move(_enemyToCreate.back());
+            std::shared_ptr<Enemy> objToCreate = _enemyToCreate.back();
             _enemies.push_back(std::move(objToCreate));
             _enemyToCreate.pop_back();
+        }
+
+        while (!_meteorToRemove.empty()) {
+            Meteor& objToRemove = _meteorToRemove.back();
+            _meteors.erase(std::remove_if(
+                _meteors.begin(),
+                _meteors.end(),
+                [&](auto& p) {
+                    return objToRemove.Id() == p->Id();
+                }
+            ), _meteors.end());
+            _meteorToRemove.pop_back();
+        }
+
+
+        while (!_meteorToCreate.empty()) {
+            std::shared_ptr<Meteor> objToCreate = _meteorToCreate.back();
+            _meteors.push_back(std::move(objToCreate));
+            _meteorToCreate.pop_back();
         }
     }
 
@@ -166,6 +196,10 @@ private:
 
         for (auto& enemy : _enemies) {
             enemy->Render(_renderer);
+        }
+
+        for (auto& meteor : _meteors) {
+            meteor->Render(_renderer);
         }
 
         _scoreText->Render(_renderer);
@@ -219,8 +253,8 @@ public:
         _bulletsToRemove.push_back(object);
     }
 
-    void SpawnBullet(std::shared_ptr<Bullet>&& object) {
-        _bulletsToCreate.push_back(std::move(object));
+    void SpawnBullet(std::shared_ptr<Bullet> object) {
+        _bulletsToCreate.push_back(object);
     }
 
     void DestroyEnemy(Enemy& object) {
@@ -228,8 +262,16 @@ public:
         _enemyToRemove.push_back(object);
     }
 
-    void SpawnEnemy(std::shared_ptr<Enemy>&& object) {
-        _enemyToCreate.push_back(std::move(object));
+    void SpawnEnemy(std::shared_ptr<Enemy> object) {
+        _enemyToCreate.push_back(object);
+    }
+
+    void DestroyMeteor(Meteor& object) {
+        _meteorToRemove.push_back(object);
+    }
+
+    void SpawnMeteor(std::shared_ptr<Meteor> object) {
+        _meteorToCreate.push_back(object);
     }
 
     void KillPlayer() {
