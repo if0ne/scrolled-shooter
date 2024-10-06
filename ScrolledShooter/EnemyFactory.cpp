@@ -19,7 +19,7 @@ void EnemyFactory::Update() {
     if (_active < _maxActive && elapsed > _spawnRate) {
         _lastSpawnTime = tick;
         _active++;
-        _spawnRate = std::max(_spawnRate - 0.01f, 0.0f);
+        _spawnRate = std::max(_spawnRate - 0.01f, 0.2f);
         Game::Instance().SpawnEnemy(RandomEnemy());
     }
 

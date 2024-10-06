@@ -154,6 +154,10 @@ private:
         SDL_SetRenderDrawColor(_renderer, 66, 170, 255, 255);
         SDL_RenderClear(_renderer);
 
+        SDL_Rect rect = { 0.0, kScreenHeight - 10, kScreenWidth, kScreenHeight };
+        SDL_SetRenderDrawColor(_renderer, 0, 230, 0, 255);
+        SDL_RenderFillRect(_renderer, &rect);
+
         _playerShip->Render(_renderer);
 
         for (auto& bullet : _bullets) {

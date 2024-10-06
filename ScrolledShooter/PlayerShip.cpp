@@ -27,7 +27,7 @@ void PlayerShip::Update(float dt) {
 
     _y += _velocityY * dt;
 
-    if (_y >= Game::kScreenHeight - 10.0) {
+    if (_y + _height / 2 >= Game::kScreenHeight - 10.0) {
         Game::Instance().KillPlayer();
     }
 }

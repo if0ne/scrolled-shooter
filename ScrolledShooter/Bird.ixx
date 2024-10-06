@@ -17,19 +17,7 @@ public:
         , _targetY(y)
     {}
 
-    void Update(float dt) override {
-        Enemy::Update(dt);
-
-        float delta = _targetY - _y;
-
-        if (abs(static_cast<int>(delta)) > 1) {
-            _y = Lerp(_y, _targetY, 2.0 * dt);
-        } else {
-            _targetY = _baseY + Random(-400.0f, 400.0f);
-        }
-
-        _x += _velocityX * dt;
-    }
+    void Update(float dt) override;
 
     void Render(SDL_Renderer* renderer) override {
         SDL_Rect rect = { _x - _width / 2, _y - _height / 2, _width, _height };
