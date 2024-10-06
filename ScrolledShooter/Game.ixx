@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <exception>
 #include <vector>
@@ -42,7 +43,7 @@ private:
     }
 
     void Initialize() {
-        _playerShip = std::make_shared<PlayerShip>(150, 720 / 2, 5);
+        _playerShip = std::make_shared<PlayerShip>(150, 720 / 2, 0.125f);
 
         _playerController = std::make_shared<PlayerController>(_playerShip);
 

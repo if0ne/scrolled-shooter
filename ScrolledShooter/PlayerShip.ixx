@@ -1,11 +1,10 @@
+#pragma once
 #include <SDL.h>
 
 export module PlayerShip;
 
 import GameObject;
 import Utility;
-
-export class Game;
 
 export class PlayerShip : public GameObject {
 private:
@@ -16,19 +15,17 @@ private:
     float _prevSign;
     float _moveThreshold;
 
-    int _bulletsPerSecond;
-    float _shootDelay;
+    float _fireRate;
     float _lastShotTime;
 public:
-    PlayerShip(float x, float y, int bulltesPerSecond) 
+    PlayerShip(float x, float y, float fireRate) 
         : GameObject(x, y, 250.0f, 100.0f)
         , _targetY(y)
         , _moveThreshold(_height / 2.0f)
         , _velocityY(0.0f)
-        , _acceleration(0.33f)
+        , _acceleration(1700.0f)
         , _prevSign(1.0f)
-        , _bulletsPerSecond(bulltesPerSecond)
-        , _shootDelay(1.0 / _bulletsPerSecond)
+        , _fireRate(fireRate)
         , _lastShotTime(0.0)
     {}
 
@@ -49,13 +46,7 @@ public:
             _velocityY += dt * _acceleration * sign;
         }
 
-        if (_y < _targetY && _y + _velocityY > _targetY
-            || _y > _targetY && _y + _velocityY < _targetY) {
-            _velocityY = 0.0;
-            _y = _targetY;
-        } else {
-            _y += _velocityY;
-        }
+        _y += _velocityY * dt;
     }
 
     void Render(SDL_Renderer* renderer) override {
